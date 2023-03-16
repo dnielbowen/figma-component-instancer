@@ -1,7 +1,7 @@
 {
   "name": "Bulk component instancer",
   "id": "1218095779709857260",
-  "api": "1.0.0",
+  "api": "1.0.1",
   "main": "code.js",
   "capabilities": [],
   "enableProposedApi": false,
