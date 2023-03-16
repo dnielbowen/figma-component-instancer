@@ -5,7 +5,8 @@ community page) to create multiple instances of a component with varying
 properties, driven by a simple CSV file whose rows define the properties of each
 instance.
 
-For example the following CSV file would create 10 instances of a component with two TEXT properties (prop1 and prop2) and one BOOLEAN property (prop3):
+For example the following CSV file would create 10 instances of a component 
+with two TEXT properties (prop1 and prop2) and one BOOLEAN property (prop3):
 
 ```
 prop1,prop2,prop3
