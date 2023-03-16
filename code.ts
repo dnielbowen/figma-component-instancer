@@ -13,24 +13,24 @@ figma.ui.onmessage = msg => {
     const sels = figma.currentPage.selection;
     const selectionTypes = sels.map(x => x.type);
     if (sels.length === 2 && selectionTypes.includes("COMPONENT") && selectionTypes.includes("FRAME")) {
-      const component = sels[(sels[0].type === "COMPONENT" ? 0 : 1)] as ComponentNode;
-      const frame = sels[(sels[0].type === "FRAME" ? 0 : 1)] as FrameNode;
+      const component = sels[(sels[0].type === "COMPONENT") ? 0 : 1] as ComponentNode;
+      const frame = sels[(sels[0].type === "FRAME") ? 0 : 1] as FrameNode;
 
-      const props = component.componentPropertyDefinitions;
+      const propDefs = component.componentPropertyDefinitions;
 
       const { csvData }: { csvData: string } = msg;
       const headers = csvData.split("\n")[0].split(",").map(k => k.trim());
 
       const properlyNamedHeaders = headers
         .map(k => {
-          for (const fullPropName of Object.keys(props)) {
+          for (const fullPropName of Object.keys(propDefs)) {
             if (fullPropName.startsWith(k) && fullPropName[k.length] === "#") {
-              if (props[fullPropName].type === "BOOLEAN") {
+              if (propDefs[fullPropName].type === "BOOLEAN") {
                 return {
                   fullPropName,
                   convert: (val: string) => !val ? undefined : !(val === "FALSE" || val === "0"),
                 };
-              } else if (props[fullPropName].type === "TEXT") {
+              } else if (propDefs[fullPropName].type === "TEXT") {
                 return {
                   fullPropName,
                   convert: (val: string) => val,
