@@ -3,7 +3,7 @@
 // full browser environment (see documentation).
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__);
+figma.showUI(__html__, { height: 500, width: 600 });
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
@@ -18,7 +18,7 @@ figma.ui.onmessage = msg => {
       const props = component.componentPropertyDefinitions;
 
       const { csvData }: { csvData: string } = msg;
-      const headers = csvData.split("\n")[0].split(",");
+      const headers = csvData.split("\n")[0].split(",").map(k => k.trim());
 
       const properlyNamedHeaders = headers.map(k => {
         for (const fullPropName of Object.keys(props)) {
@@ -44,7 +44,6 @@ figma.ui.onmessage = msg => {
         const propSetPairs = Object.fromEntries(properlyNamedHeaders
           .map((header, i) => [header?.fullPropName, header?.convert(fields[i])])
           .filter(([k, v]) => k !== undefined && v !== undefined));
-        console.log(propSetPairs);
 
         const instance = component.createInstance()
         instance.setProperties(propSetPairs);
