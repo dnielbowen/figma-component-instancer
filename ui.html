@@ -8,9 +8,12 @@
 <h2>CSV component instantiator</h2>
 
 <hr />
-<div style="display:flex; justify-content: center; gap: 16px;">
-  <button id="selectfile">Select CSV file</button>
-  <button disabled id="create">Create</button>
+<div style="display:flex; flex-direction: column; align-items: center; gap: 16px;">
+  <div id="description">CSV status: (no file selected)</div>
+  <div style="display:flex; gap: 16px;">
+    <button id="selectfile">Select CSV file</button>
+    <button disabled id="create">Create</button>
+  </div>
 </div>
 <hr />
 
@@ -60,6 +63,11 @@ another overwrite,...now the second,TRUE
       const reader = new FileReader();
       reader.addEventListener('load', (event) => {
         const csvData = event.target.result.trim();
+
+        const txtDesc = `CSV status: ${csvData.split("\n").length-1} instances `
+          + `will be generated modifying properties `
+          + `${csvData.split("\n")[0].split(",").map(k => '"' + k + '"').join(", ")}`;
+        document.getElementById('description').textContent = txtDesc;
 
         const createButton = document.getElementById('create');
         createButton.disabled = false;
