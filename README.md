@@ -7,6 +7,10 @@ CSV file whose rows define the properties of each instance.
 
     https://www.figma.com/community/plugin/1218095779709857260
 
+[Watch a demo](https://youtu.be/IlWcNTyAD8o):
+
+    https://youtu.be/IlWcNTyAD8o
+
 For example the following CSV file would create 10 instances of a component 
 with two `TEXT` properties (`prop1` and `prop2`) and one `BOOLEAN` property 
 (`prop3`):
