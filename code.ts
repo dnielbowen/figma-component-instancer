@@ -25,18 +25,15 @@ figma.ui.onmessage = msg => {
         .map((k, iCol) => {
           for (const fullPropName of Object.keys(propDefs)) {
             if (fullPropName.startsWith(k) && fullPropName[k.length] === "#") {
+              let fConvert = undefined;
               if (propDefs[fullPropName].type === "BOOLEAN") {
-                return {
-                  fullPropName,
-                  iCol,
-                  convert: (val: string) => !val ? undefined : !["F", "FALSE", "0"].includes(val.toUpperCase()),
-                };
+                fConvert = (val: string) => !val ? undefined : !["F", "FALSE", "0"].includes(val.toUpperCase());
               } else if (propDefs[fullPropName].type === "TEXT") {
-                return {
-                  fullPropName,
-                  iCol,
-                  convert: (val: string) => val,
-                };
+                fConvert = (val: string) => val;
+              }
+
+              if (fConvert) {
+                return { fullPropName, fConvert, iCol };
               }
             }
           }
@@ -48,7 +45,7 @@ figma.ui.onmessage = msg => {
         const fields = line.split(",");
 
         const propSetPairs = Object.fromEntries(properlyNamedHeaders
-          .map(header => [header?.fullPropName, header?.convert(fields[header.iCol])])
+          .map(header => [header?.fullPropName, header?.fConvert(fields[header.iCol])])
           .filter(([k, v]) => k !== undefined && v !== undefined && v !== ""));
 
         const instance = component.createInstance()
