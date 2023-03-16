@@ -20,30 +20,32 @@ figma.ui.onmessage = msg => {
       const { csvData }: { csvData: string } = msg;
       const headers = csvData.split("\n")[0].split(",").map(k => k.trim());
 
-      const properlyNamedHeaders = headers.map(k => {
-        for (const fullPropName of Object.keys(props)) {
-          if (fullPropName.startsWith(k) && fullPropName[k.length] === "#") {
-            if (props[fullPropName].type === "BOOLEAN") {
-              return {
-                fullPropName,
-                convert: (val: string) => !(!val || val === "FALSE" || val === "0"),
-              };
-            } else if (props[fullPropName].type === "TEXT") {
-              return {
-                fullPropName,
-                convert: (val: string) => val,
-              };
+      const properlyNamedHeaders = headers
+        .map(k => {
+          for (const fullPropName of Object.keys(props)) {
+            if (fullPropName.startsWith(k) && fullPropName[k.length] === "#") {
+              if (props[fullPropName].type === "BOOLEAN") {
+                return {
+                  fullPropName,
+                  convert: (val: string) => !val ? undefined : !(val === "FALSE" || val === "0"),
+                };
+              } else if (props[fullPropName].type === "TEXT") {
+                return {
+                  fullPropName,
+                  convert: (val: string) => val,
+                };
+              }
             }
           }
-        }
-      });
+        })
+        .filter(k => k);
 
       for (const line of csvData.split("\n").slice(1)) {
         const fields = line.split(",");
 
         const propSetPairs = Object.fromEntries(properlyNamedHeaders
           .map((header, i) => [header?.fullPropName, header?.convert(fields[i])])
-          .filter(([k, v]) => k !== undefined && v !== undefined));
+          .filter(([k, v]) => k !== undefined && v !== undefined && v !== ""));
 
         const instance = component.createInstance()
         instance.setProperties(propSetPairs);
