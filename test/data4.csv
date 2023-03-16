@@ -1,9 +1,9 @@
 prop1,prop2,prop3
-my text field value,prop 2 valA,val3
+my text field value,prop 2 valA,TRUE
 prop1 valB,,1
 B,,
 valD,,0
-valE,val2,0
+valE,val2,FALSE
 ,,
  ,,
 ,       ,
