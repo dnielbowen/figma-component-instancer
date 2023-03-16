@@ -1,9 +1,10 @@
 # CSV Figma Component Instancer
 
-This is a Figma plugin (submitted and pending approval available on the Figma
-community page) to create multiple instances of a component with varying
-properties, driven by a simple CSV file whose rows define the properties of each
-instance.
+This is a Figma plugin available at the link below to create multiple instances 
+of a component with varying properties, driven by a simple CSV file whose rows 
+define the properties of each instance.
+
+    https://www.figma.com/community/plugin/1218095779709857260
 
 For example the following CSV file would create 10 instances of a component 
 with two `TEXT` properties (`prop1` and `prop2`) and one `BOOLEAN` property 
