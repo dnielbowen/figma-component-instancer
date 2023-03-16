@@ -11,9 +11,10 @@ figma.showUI(__html__, { height: 500, width: 600 });
 figma.ui.onmessage = msg => {
   if (msg.type === 'create-instances') {
     const sels = figma.currentPage.selection;
-    if (sels.length > 1 && sels[0].type === "COMPONENT" && sels[1].type === "FRAME") {
-      const component = sels[0] as ComponentNode;
-      const frame = sels[1] as FrameNode;
+    const selectionTypes = sels.map(x => x.type);
+    if (sels.length === 2 && selectionTypes.includes("COMPONENT") && selectionTypes.includes("FRAME")) {
+      const component = sels[(sels[0].type === "COMPONENT" ? 0 : 1)] as ComponentNode;
+      const frame = sels[(sels[0].type === "FRAME" ? 0 : 1)] as FrameNode;
 
       const props = component.componentPropertyDefinitions;
 
