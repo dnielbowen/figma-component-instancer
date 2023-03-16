@@ -6,7 +6,8 @@ properties, driven by a simple CSV file whose rows define the properties of each
 instance.
 
 For example the following CSV file would create 10 instances of a component 
-with two TEXT properties (prop1 and prop2) and one BOOLEAN property (prop3):
+with two `TEXT` properties (`prop1` and `prop2`) and one `BOOLEAN` property 
+(`prop`3):
 
 ```
 prop1,prop2,prop3
@@ -28,8 +29,8 @@ boolean-displayed portions of each row.
 
 ## Limitations:
 
-- Only TEXT and BOOLEAN property types are supported
-- TEXT data cannot contain commas
+- Only `TEXT` and `BOOLEAN` property types are supported
+- `TEXT` data cannot contain commas
 
 # Instructions
 
@@ -43,8 +44,11 @@ Next, use the "Select CSV file" button to choose a CSV file whose first row
 (CSV header row) corresponds to component property names. Each subsequent row
 represents an instance with the properties specified in that row.
 
+Then, click the Create button.
+
 # Running
 
-Consult the standard Figma documentation to get this plugin running:
+Consult the standard Figma documentation to get this plugin running (or just 
+use it from the Figma community page):
 
   https://www.figma.com/plugin-docs/plugin-quickstart/
