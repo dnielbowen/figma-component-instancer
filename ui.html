@@ -1,0 +1,50 @@
+<style>
+  /* html {
+    height: 500px;
+  } */
+</style>
+
+<h2>Component instantiator</h2>
+
+<p>Select two items: the first a component to instantiate and the second a frame
+to insert the instantiated components into</p>
+
+<p>Create a CSV file whose first row corresponds to component properties. Each
+subsequent row then contains values to these properties for instantiation inside
+the frame.</p>
+
+<div>
+  <button id="selectfile">Select CSV file</button>
+</div>
+<div>
+  <button disabled id="create">Create</button>
+</div>
+
+<script>
+
+  document.getElementById('selectfile').onclick = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.addEventListener('load', (event) => {
+        const csvData = event.target.result.trim();
+        console.log(csvData);
+
+        const createButton = document.getElementById('create');
+        createButton.disabled = false;
+        createButton.onclick = () => {
+          parent.postMessage({ pluginMessage: { type: 'create-instances', csvData } }, '*')
+        }
+      });
+      reader.readAsText(file);
+    });
+    input.click();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    parent.postMessage({ pluginMessage: { type: 'load' } }, '*')
+  })
+
+</script>

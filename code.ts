@@ -1,0 +1,56 @@
+// This file holds the main code for the plugins. It has access to the *document*.
+// You can access browser APIs in the <script> tag inside "ui.html" which has a
+// full browser environment (see documentation).
+
+// This shows the HTML page in "ui.html".
+figma.showUI(__html__);
+
+// Calls to "parent.postMessage" from within the HTML page will trigger this
+// callback. The callback will be passed the "pluginMessage" property of the
+// posted message.
+figma.ui.onmessage = msg => {
+  if (msg.type === 'create-instances') {
+    const sels = figma.currentPage.selection;
+    if (sels.length > 1 && sels[0].type === "COMPONENT" && sels[1].type === "FRAME") {
+      const component = sels[0] as ComponentNode;
+      const frame = sels[1] as FrameNode;
+
+      const props = component.componentPropertyDefinitions;
+
+      const { csvData }: { csvData: string } = msg;
+      const headers = csvData.split("\n")[0].split(",");
+
+      const properlyNamedHeaders = headers.map(k => {
+        for (const fullPropName of Object.keys(props)) {
+          if (fullPropName.startsWith(k) && fullPropName[k.length] === "#") {
+            if (props[fullPropName].type === "BOOLEAN") {
+              return {
+                fullPropName,
+                convert: (val: string) => !(!val || val === "FALSE" || val === "0"),
+              };
+            } else if (props[fullPropName].type === "TEXT") {
+              return {
+                fullPropName,
+                convert: (val: string) => val,
+              };
+            }
+          }
+        }
+      });
+
+      for (const line of csvData.split("\n").slice(1)) {
+        const fields = line.split(",");
+
+        const propSetPairs = Object.fromEntries(properlyNamedHeaders
+          .map((header, i) => [header?.fullPropName, header?.convert(fields[i])])
+          .filter(([k, v]) => k !== undefined && v !== undefined));
+        console.log(propSetPairs);
+
+        const instance = component.createInstance()
+        instance.setProperties(propSetPairs);
+        frame.appendChild(instance);
+      }
+    }
+    figma.closePlugin();
+  }
+};
