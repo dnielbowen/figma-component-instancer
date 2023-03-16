@@ -7,7 +7,7 @@ instance.
 
 For example the following CSV file would create 10 instances of a component 
 with two `TEXT` properties (`prop1` and `prop2`) and one `BOOLEAN` property 
-(`prop`3):
+(`prop3`):
 
 ```
 prop1,prop2,prop3
