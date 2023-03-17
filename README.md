@@ -36,7 +36,6 @@ boolean-displayed portions of each row.
 ## Limitations:
 
 - Only `TEXT` and `BOOLEAN` property types are supported
-- `TEXT` data cannot contain commas
 
 # Instructions
 
