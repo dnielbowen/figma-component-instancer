@@ -2,6 +2,37 @@
 // You can access browser APIs in the <script> tag inside "ui.html" which has a
 // full browser environment (see documentation).
 
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let currentField = '';
+  let insideQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line.charAt(i);
+
+    if (char === ',' && !insideQuotes) {
+      result.push(currentField);
+      currentField = '';
+    } else if (char === '"' && !insideQuotes) {
+      insideQuotes = true;
+    } else if (char === '"' && insideQuotes) {
+      if (line.charAt(i + 1) === '"') {
+        // Handle escaped quotes
+        currentField += '"';
+        i++;
+      } else {
+        insideQuotes = false;
+      }
+    } else {
+      currentField += char;
+    }
+  }
+
+  result.push(currentField);
+
+  return result;
+}
+
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, { height: 500, width: 600 });
 
@@ -42,7 +73,7 @@ figma.ui.onmessage = msg => {
 
       const csvRows = csvData.split("\n").slice(1); // Skip header line
       for (const line of csvRows) {
-        const fields = line.split(",");
+        const fields = parseCSVLine(line);
 
         const propSetPairs = Object.fromEntries(properlyNamedHeaders
           .map(header => [header?.fullPropName, header?.fConvert(fields[header.iCol])])

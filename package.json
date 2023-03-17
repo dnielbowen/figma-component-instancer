@@ -5,6 +5,7 @@
   "main": "code.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "test": "ts-mocha -p tsconfig.json **/*.spec.ts",
     "watch": "npm run build -- --watch"
   },
   "author": "",

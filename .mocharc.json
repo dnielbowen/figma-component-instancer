@@ -1,0 +1,11 @@
+{
+  "extension": [
+    "ts"
+  ],
+  "spec": [
+    "./test/**/*.spec.ts",
+    "./**/*.spec.ts"
+  ],
+  "require": "ts-node/register",
+  "timeout": 1800000
+}

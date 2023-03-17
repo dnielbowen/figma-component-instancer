@@ -6,6 +6,8 @@ node_modules
 out/
 dist/
 code.js
+util.js
+test/code.spec.js
 
 .DS_Store
 
