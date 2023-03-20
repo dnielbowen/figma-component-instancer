@@ -43,8 +43,8 @@ figma.ui.onmessage = msg => {
   if (msg.type === 'create-instances') {
     const sels = figma.currentPage.selection;
     const selectionTypes = sels.map(x => x.type);
-    if (sels.length === 2 && selectionTypes.includes("COMPONENT") && selectionTypes.includes("FRAME")) {
-      const component = sels[(sels[0].type === "COMPONENT") ? 0 : 1] as ComponentNode;
+    if (sels.length === 2 && (selectionTypes.includes("COMPONENT") || selectionTypes.includes("COMPONENT_SET")) && selectionTypes.includes("FRAME")) {
+      const component = sels[sels[0].type.startsWith("COMPONENT") ? 0 : 1] as ComponentNode;
       const frame = sels[(sels[0].type === "FRAME") ? 0 : 1] as FrameNode;
 
       const propDefs = component.componentPropertyDefinitions;
@@ -55,17 +55,21 @@ figma.ui.onmessage = msg => {
       const properlyNamedHeaders = headers
         .map((k, iCol) => {
           for (const fullPropName of Object.keys(propDefs)) {
+            let fConvert = undefined;
             if (fullPropName.startsWith(k) && fullPropName[k.length] === "#") {
-              let fConvert = undefined;
               if (propDefs[fullPropName].type === "BOOLEAN") {
                 fConvert = (val: string) => !val ? undefined : !["F", "FALSE", "0"].includes(val.toUpperCase());
               } else if (propDefs[fullPropName].type === "TEXT") {
                 fConvert = (val: string) => val;
               }
+            }
+            // Variant props don't have the "#" in their prop name
+            if (fullPropName.length === k.length) {
+              fConvert = (val: string) => val;
+            }
 
-              if (fConvert) {
-                return { fullPropName, fConvert, iCol };
-              }
+            if (fConvert) {
+              return { fullPropName, fConvert, iCol };
             }
           }
         })
@@ -74,6 +78,8 @@ figma.ui.onmessage = msg => {
       const csvRows = csvData.split("\n").slice(1); // Skip header line
       for (const line of csvRows) {
         const fields = parseCSVLine(line);
+
+        console.log(properlyNamedHeaders);
 
         const propSetPairs = Object.fromEntries(properlyNamedHeaders
           .map(header => [header?.fullPropName, header?.fConvert(fields[header.iCol])])
